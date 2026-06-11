@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: agent-server
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/agent_platform?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  elasticsearch:
+    uris: ${ES_URIS:http://localhost:9200}
+    username: ${ES_USERNAME:}
+    password: ${ES_PASSWORD:}
+
+  ai:
+    openai:
+      api-key: ${AI_API_KEY:sk-placeholder}
+      base-url: ${AI_BASE_URL:https://api.deepseek.com}
+      chat:
+        options:
+          model: ${AI_MODEL:deepseek-chat}
+          temperature: 0.7
+          max-tokens: 4096
+
+# Milvus 配置（Phase 4 知识库功能）
+milvus:
+  enabled: false
+  host: ${MILVUS_HOST:localhost}
+  port: ${MILVUS_PORT:19530}
+
+# 应用配置
+app:
+  jwt:
+    secret: ${JWT_SECRET:your-256-bit-secret-key-for-jwt-signing-replace-in-production}
+    expiration-hours: 24
+    refresh-expiration-hours: 168
+  work-dir: ${APP_WORK_DIR:./workspace}
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:3000
+  plugins:
+    upload-dir: ${PLUGIN_DIR:./plugins}
+  upload:
+    dir: ${UPLOAD_DIR:./uploads}
+  search:
+    es-enabled: ${ES_ENABLED:false}
